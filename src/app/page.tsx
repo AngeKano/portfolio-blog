@@ -1,12 +1,16 @@
-import Link from 'next/link';
-import { prisma } from '../infrastructure/db/prisma/client';
+import Link from "next/link";
+import { prisma } from "../infrastructure/db/prisma/client";
+import ListArticlesSection from "@/ui/components/blog/ListArticlesSection";
+
+// Ajoutez cette ligne pour désactiver la mise en cache
+export const dynamic = "force-dynamic";
 
 async function getLatestContent() {
   // Récupérer les articles les plus récents
   const articles = await prisma.article.findMany({
     where: { published: true },
-    orderBy: { publishedAt: 'desc' },
-    take: 3,
+    orderBy: { publishedAt: "desc" }, // Réactivez l'ordre et la limite
+    take: 5,
     select: {
       id: true,
       title: true,
@@ -18,7 +22,7 @@ async function getLatestContent() {
 
   // Récupérer les projets les plus récents
   const projects = await prisma.project.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: "desc" },
     take: 3,
     select: {
       id: true,
@@ -40,11 +44,15 @@ async function getLatestContent() {
     },
   });
 
+  // J'ai remarqué que vous aviez mis en commentaire certaines parties
+  // N'oubliez pas de réactiver l'orderBy et le take
+
   return { articles, projects, skills };
 }
 
 export default async function Home() {
   const { articles, projects, skills } = await getLatestContent();
+  console.log("articles__ ", articles); // Le console.log montrera les données actuelles
 
   return (
     <main className="min-h-screen">
@@ -54,7 +62,8 @@ export default async function Home() {
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl font-bold mb-4">Portfolio Blog</h1>
             <p className="text-xl mb-8">
-              Développeur passionné partageant des projets, des connaissances et des expériences dans le domaine du développement web.
+              Développeur passionné partageant des projets, des connaissances et
+              des expériences dans le domaine du développement web.
             </p>
             <div className="flex justify-center gap-4">
               <Link
@@ -81,23 +90,38 @@ export default async function Home() {
             <h2 className="text-3xl font-bold text-center mb-8">À Propos</h2>
             <div className="prose prose-lg mx-auto">
               <p>
-                Je suis un développeur web full-stack passionné par la création d'applications web modernes et performantes. 
-                Mon expertise combine à la fois le front-end et le back-end, avec une attention particulière aux bonnes pratiques 
-                et à l'architecture propre du code.
+                Je suis un développeur web full-stack passionné par la création
+                d'applications web modernes et performantes. Mon expertise
+                combine à la fois le front-end et le back-end, avec une
+                attention particulière aux bonnes pratiques et à l'architecture
+                propre du code.
               </p>
               <p>
-                Ce portfolio-blog est conçu pour partager mes projets, mes connaissances et mes expériences avec la communauté. 
-                N'hésitez pas à parcourir mes articles et projets, ou à me contacter pour discuter de vos idées et projets.
+                Ce portfolio-blog est conçu pour partager mes projets, mes
+                connaissances et mes expériences avec la communauté. N'hésitez
+                pas à parcourir mes articles et projets, ou à me contacter pour
+                discuter de vos idées et projets.
               </p>
             </div>
             <div className="mt-8 text-center">
-              <Link 
+              <Link
                 href="/about"
                 className="inline-flex items-center text-primary-600 hover:text-primary-800"
               >
                 En savoir plus sur moi
-                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <svg
+                  className="ml-2 w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
                 </svg>
               </Link>
             </div>
@@ -111,17 +135,23 @@ export default async function Home() {
           <h2 className="text-3xl font-bold text-center mb-8">Compétences</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {skills.map((skill) => (
-              <div 
+              <div
                 key={skill.id}
                 className="bg-white p-4 rounded-lg shadow-soft text-center hover:shadow-md transition-shadow"
               >
                 {skill.image ? (
                   <div className="w-12 h-12 mx-auto mb-3">
-                    <img src={skill.image} alt={skill.name} className="w-full h-full object-contain" />
+                    <img
+                      src={skill.image}
+                      alt={skill.name}
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 ) : (
                   <div className="w-12 h-12 mx-auto mb-3 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center">
-                    <span className="text-xl font-bold">{skill.name.charAt(0)}</span>
+                    <span className="text-xl font-bold">
+                      {skill.name.charAt(0)}
+                    </span>
                   </div>
                 )}
                 <h3 className="text-lg font-medium">{skill.name}</h3>
@@ -132,13 +162,24 @@ export default async function Home() {
             ))}
           </div>
           <div className="mt-10 text-center">
-            <Link 
+            <Link
               href="/skills"
               className="inline-flex items-center text-primary-600 hover:text-primary-800"
             >
               Voir toutes mes compétences
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <svg
+                className="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
               </svg>
             </Link>
           </div>
@@ -148,17 +189,19 @@ export default async function Home() {
       {/* Projets récents */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Projets Récents</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Projets Récents
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (
-              <div 
+              <div
                 key={project.id}
                 className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
               >
                 {project.image ? (
-                  <img 
-                    src={project.image} 
-                    alt={project.title} 
+                  <img
+                    src={project.image}
+                    alt={project.title}
                     className="w-full h-48 object-cover"
                   />
                 ) : (
@@ -168,10 +211,12 @@ export default async function Home() {
                 )}
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-gray-700 mb-4 line-clamp-3">{project.description}</p>
+                  <p className="text-gray-700 mb-4 line-clamp-3">
+                    {project.description}
+                  </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.technologies.slice(0, 3).map((tech, index) => (
-                      <span 
+                      <span
                         key={index}
                         className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded"
                       >
@@ -184,7 +229,7 @@ export default async function Home() {
                       </span>
                     )}
                   </div>
-                  <Link 
+                  <Link
                     href={`/projects/${project.id}`}
                     className="text-primary-600 hover:text-primary-800 font-medium"
                   >
@@ -195,13 +240,24 @@ export default async function Home() {
             ))}
           </div>
           <div className="mt-10 text-center">
-            <Link 
+            <Link
               href="/projects"
               className="inline-flex items-center text-primary-600 hover:text-primary-800"
             >
               Voir tous mes projets
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <svg
+                className="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
               </svg>
             </Link>
           </div>
@@ -211,17 +267,19 @@ export default async function Home() {
       {/* Articles récents */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Articles Récents</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Articles Récents
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.map((article) => (
-              <div 
+              <div
                 key={article.id}
                 className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
               >
                 {article.image ? (
-                  <img 
-                    src={article.image} 
-                    alt={article.title} 
+                  <img
+                    src={article.image}
+                    alt={article.title}
                     className="w-full h-48 object-cover"
                   />
                 ) : (
@@ -231,22 +289,36 @@ export default async function Home() {
                 )}
                 <div className="p-6">
                   <div className="flex items-center text-gray-500 text-sm mb-2">
-                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="w-4 h-4 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
-                    {article.publishedAt ? (
-                      new Date(article.publishedAt).toLocaleDateString('fr-FR', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })
-                    ) : (
-                      'Non publié'
-                    )}
+                    {article.publishedAt
+                      ? new Date(article.publishedAt).toLocaleDateString(
+                          "fr-FR",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )
+                      : "Non publié"}
                   </div>
                   <h3 className="text-xl font-bold mb-2">{article.title}</h3>
-                  <p className="text-gray-700 mb-4 line-clamp-3">{article.description}</p>
-                  <Link 
+                  <p className="text-gray-700 mb-4 line-clamp-3">
+                    {article.description}
+                  </p>
+                  <Link
                     href={`/blog/${article.id}`}
                     className="text-primary-600 hover:text-primary-800 font-medium"
                   >
@@ -257,25 +329,40 @@ export default async function Home() {
             ))}
           </div>
           <div className="mt-10 text-center">
-            <Link 
+            <Link
               href="/blog"
               className="inline-flex items-center text-primary-600 hover:text-primary-800"
             >
               Voir tous les articles
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <svg
+                className="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
               </svg>
             </Link>
           </div>
         </div>
       </section>
+      {/* <ListArticlesSection /> */}
 
       {/* Call to Action */}
       <section className="py-20 bg-primary-700 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Intéressé par une collaboration ?</h2>
+          <h2 className="text-3xl font-bold mb-4">
+            Intéressé par une collaboration ?
+          </h2>
           <p className="text-xl mb-8">
-            N'hésitez pas à me contacter pour discuter de vos projets ou de vos idées.
+            N'hésitez pas à me contacter pour discuter de vos projets ou de vos
+            idées.
           </p>
           <Link
             href="/contact"

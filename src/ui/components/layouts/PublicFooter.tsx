@@ -1,12 +1,12 @@
-import React from 'react';
-import Link from 'next/link';
-import { 
-  LuGithub, 
-  LuLinkedin, 
-  LuTwitter, 
-  LuMail, 
-  LuExternalLink 
-} from 'react-icons/lu';
+import React from "react";
+import Link from "next/link";
+import {
+  LuGithub,
+  LuLinkedin,
+  LuTwitter,
+  LuMail,
+  LuExternalLink,
+} from "react-icons/lu";
 
 const PublicFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -31,27 +31,42 @@ const PublicFooter: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Navigation</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  href="/"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Accueil
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  href="/blog"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="/projects" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  href="/projects"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Projets
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  href="/about"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   À propos
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  href="/contact"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Contact
                 </Link>
               </li>
@@ -108,7 +123,7 @@ const PublicFooter: React.FC = () => {
           <p className="text-gray-400 text-sm">
             &copy; {currentYear} PortfolioBlog. Tous droits réservés.
           </p>
-          
+
           {/* Admin login */}
           <Link
             href="/login"

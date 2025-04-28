@@ -1,17 +1,17 @@
 // ui/components/common/Modal.tsx
-'use client';
+"use client";
 
-import React, { useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
-import { LuX } from 'react-icons/lu';
-import { cn } from '../../../lib/utils';
+import React, { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import { LuX } from "react-icons/lu";
+import { cn } from "../../../lib/utils";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: "sm" | "md" | "lg" | "xl";
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -19,7 +19,7 @@ const Modal: React.FC<ModalProps> = ({
   onClose,
   title,
   children,
-  size = 'md',
+  size = "md",
 }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -34,34 +34,34 @@ const Modal: React.FC<ModalProps> = ({
   // Ajouter la gestion des touches clavier (échap pour fermer)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
   // Bloquer le scroll du body quand la modal est ouverte
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
   // Déterminer la largeur du modal en fonction de la taille
   const sizeClasses = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-xl',
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
   };
 
   // Ne rien afficher si la modal est fermée
@@ -76,7 +76,7 @@ const Modal: React.FC<ModalProps> = ({
       <div
         ref={modalRef}
         className={cn(
-          'bg-white rounded-lg shadow-xl w-full transform transition-all',
+          "bg-white rounded-lg shadow-xl w-full transform transition-all",
           sizeClasses[size]
         )}
         role="dialog"

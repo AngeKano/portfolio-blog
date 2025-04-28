@@ -133,7 +133,7 @@
   ...et bien plus encore dans cet article !
         `,
         published: true,
-        publishedAt: new Date('2023-07-15'),
+        publishedAt: new Date('2025-07-15'),
         links: {
           github: 'https://github.com/example/nextjs-portfolio',
           demo: 'https://portfolio-demo.vercel.app',
@@ -162,7 +162,7 @@
   ...et bien plus encore dans cet article !
         `,
         published: true,
-        publishedAt: new Date('2023-09-20'),
+        publishedAt: new Date('2025-09-20'),
         tags: ['Clean Architecture', 'Best Practices', 'Software Design'],
         authorId: admin.id,
       },

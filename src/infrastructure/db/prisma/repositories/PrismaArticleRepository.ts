@@ -45,7 +45,7 @@ export class PrismaArticleRepository implements ArticleRepository {
         },
         comments: {
           orderBy: {
-            createdAt: "desc",
+            createdAt: "asc",
           },
         },
       },

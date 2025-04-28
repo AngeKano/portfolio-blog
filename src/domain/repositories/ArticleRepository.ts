@@ -48,7 +48,7 @@ export interface ArticleRepository {
    * Récupère les derniers articles publiés
    */
   findLatest(limit: number): Promise<Article[]>;
- 
+
   /**
    * Crée un nouvel article
    */

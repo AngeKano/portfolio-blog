@@ -1,28 +1,24 @@
 // src/app/admin/articles/page.tsx
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useNotificationContext } from '../../../ui/context/NotificationContext';
-import { LuPlus, LuPencil, LuTrash2, LuEye, LuEyeOff, LuLoader } from 'react-icons/lu';
-import { formatDistanceToNow } from 'date-fns';
-import { fr } from 'date-fns/locale';
-
-interface Article {
-  id: string;
-  title: string;
-  description: string;
-  published: boolean;
-  publishedAt: string | null;
-  views: number;
-  likes: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useNotificationContext } from "../../../ui/context/NotificationContext";
+import {
+  LuPlus,
+  LuPencil,
+  LuTrash2,
+  LuEye,
+  LuEyeOff,
+  LuLoader,
+} from "react-icons/lu";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
+import { ArticleSummaryDTO } from "@/application/dtos/ArticleDTO";
 
 export default function AdminArticles() {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<ArticleSummaryDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -37,16 +33,18 @@ export default function AdminArticles() {
     const fetchArticles = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/articles?onlyPublished=false');
-        
+        const response = await fetch(
+          "/api/articles?page=1&limit=10&search=&sortBy=title&sortOrder=asc&tag=&onlyPublished=false"
+        );
+
         if (!response.ok) {
-          throw new Error('Erreur lors de la récupération des articles');
+          throw new Error("Erreur lors de la récupération des articles");
         }
-        
+
         const data = await response.json();
         setArticles(data.data);
       } catch (err) {
-        setError('Impossible de charger les articles');
+        setError("Impossible de charger les articles");
         console.error(err);
       } finally {
         setLoading(false);
@@ -59,22 +57,22 @@ export default function AdminArticles() {
   // Fonction pour supprimer un article
   const deleteArticle = async () => {
     if (!deleteId) return;
-    
+
     try {
       setDeleting(true);
       const response = await fetch(`/api/articles/${deleteId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      
+
       if (!response.ok) {
-        throw new Error('Erreur lors de la suppression de l\'article');
+        throw new Error("Erreur lors de la suppression de l'article");
       }
-      
+
       // Mettre à jour la liste d'articles
-      setArticles(articles.filter(article => article.id !== deleteId));
-      success('Article supprimé avec succès');
+      setArticles(articles.filter((article) => article.id !== deleteId));
+      success("Article supprimé avec succès");
     } catch (err) {
-      showError('Impossible de supprimer l\'article');
+      showError("Impossible de supprimer l'article");
       console.error(err);
     } finally {
       setDeleting(false);
@@ -99,9 +97,9 @@ export default function AdminArticles() {
   const togglePublishStatus = async (id: string, currentStatus: boolean) => {
     try {
       const response = await fetch(`/api/articles/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           published: !currentStatus,
@@ -109,21 +107,27 @@ export default function AdminArticles() {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la mise à jour de l\'article');
+        throw new Error("Erreur lors de la mise à jour de l'article");
       }
 
       // Mettre à jour la liste d'articles
       setArticles(
-        articles.map(article => 
-          article.id === id 
-            ? { ...article, published: !currentStatus, publishedAt: !currentStatus ? new Date().toISOString() : article.publishedAt } 
+        articles.map((article) =>
+          article.id === id
+            ? {
+                ...article,
+                published: !currentStatus,
+                publishedAt: !currentStatus
+                  ? new Date().toISOString()
+                  : article.publishedAt,
+              }
             : article
         )
       );
 
-      success(`Article ${!currentStatus ? 'publié' : 'dépublié'} avec succès`);
+      success(`Article ${!currentStatus ? "publié" : "dépublié"} avec succès`);
     } catch (err) {
-      showError('Impossible de mettre à jour l\'article');
+      showError("Impossible de mettre à jour l'article");
       console.error(err);
     }
   };
@@ -179,18 +183,22 @@ export default function AdminArticles() {
                   articles.map((article) => (
                     <tr key={article.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{article.title}</div>
-                        <div className="text-sm text-gray-500 truncate max-w-md">{article.description}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {article.title}
+                        </div>
+                        <div className="text-sm text-gray-500 truncate max-w-md">
+                          {article.description}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             article.published
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-yellow-100 text-yellow-800'
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
-                          {article.published ? 'Publié' : 'Brouillon'}
+                          {article.published ? "Publié" : "Brouillon"}
                         </span>
                         {article.published && article.publishedAt && (
                           <div className="text-xs text-gray-500 mt-1">
@@ -213,13 +221,15 @@ export default function AdminArticles() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
                           <button
-                            onClick={() => togglePublishStatus(article.id, article.published)}
+                            onClick={() =>
+                              togglePublishStatus(article.id, article.published)
+                            }
                             className={`p-1 rounded ${
                               article.published
-                                ? 'text-yellow-600 hover:text-yellow-900'
-                                : 'text-green-600 hover:text-green-900'
+                                ? "text-yellow-600 hover:text-yellow-900"
+                                : "text-green-600 hover:text-green-900"
                             }`}
-                            title={article.published ? 'Dépublier' : 'Publier'}
+                            title={article.published ? "Dépublier" : "Publier"}
                           >
                             {article.published ? (
                               <LuEyeOff className="w-5 h-5" />
@@ -247,7 +257,10 @@ export default function AdminArticles() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                    <td
+                      colSpan={6}
+                      className="px-6 py-4 text-center text-gray-500"
+                    >
                       Aucun article trouvé
                     </td>
                   </tr>
@@ -262,9 +275,12 @@ export default function AdminArticles() {
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-medium mb-4">Confirmer la suppression</h3>
+            <h3 className="text-lg font-medium mb-4">
+              Confirmer la suppression
+            </h3>
             <p className="text-gray-600 mb-6">
-              Êtes-vous sûr de vouloir supprimer cet article ? Cette action est irréversible.
+              Êtes-vous sûr de vouloir supprimer cet article ? Cette action est
+              irréversible.
             </p>
             <div className="flex justify-end space-x-4">
               <button
@@ -285,7 +301,7 @@ export default function AdminArticles() {
                     Suppression...
                   </>
                 ) : (
-                  'Supprimer'
+                  "Supprimer"
                 )}
               </button>
             </div>

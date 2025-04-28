@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { formatDistanceToNow } from 'date-fns';
-import { fr } from 'date-fns/locale';
-import { LuCalendar, LuClock, LuEye, LuHeart } from 'react-icons/lu';
+import React from "react";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
+import { LuCalendar, LuClock, LuEye, LuHeart } from "react-icons/lu";
 
 interface ArticleMetaProps {
   publishedAt: string | Date | null;
@@ -12,7 +12,12 @@ interface ArticleMetaProps {
   likes: number;
 }
 
-const ArticleMeta: React.FC<ArticleMetaProps> = ({ publishedAt, readingTime, views, likes }) => {
+const ArticleMeta: React.FC<ArticleMetaProps> = ({
+  publishedAt,
+  readingTime,
+  views,
+  likes,
+}) => {
   return (
     <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
       {/* Date de publication */}

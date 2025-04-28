@@ -1,7 +1,12 @@
 // infrastructure/db/prisma/repositories/PrismaUserRepository.ts
-import { PrismaClient } from '@prisma/client';
-import { User, VisitorUser, UserRole, SocialLinks } from '../../../../domain/entities/User';
-import { UserRepository } from '../../../../domain/repositories/UserRepository';
+import { PrismaClient } from "@prisma/client";
+import {
+  User,
+  VisitorUser,
+  UserRole,
+  SocialLinks,
+} from "../../../../domain/entities/User";
+import { UserRepository } from "../../../../domain/repositories/UserRepository";
 
 export class PrismaUserRepository implements UserRepository {
   private prisma: PrismaClient;
@@ -12,7 +17,7 @@ export class PrismaUserRepository implements UserRepository {
 
   async findById(id: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
-      where: { id }
+      where: { id },
     });
 
     if (!user) return null;
@@ -22,7 +27,7 @@ export class PrismaUserRepository implements UserRepository {
 
   async findByEmail(email: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
-      where: { email }
+      where: { email },
     });
 
     if (!user) return null;
@@ -32,10 +37,10 @@ export class PrismaUserRepository implements UserRepository {
 
   async findAdminByEmail(email: string): Promise<User | null> {
     const user = await this.prisma.user.findFirst({
-      where: { 
+      where: {
         email,
-        role: UserRole.ADMIN 
-      }
+        role: UserRole.ADMIN,
+      },
     });
 
     if (!user) return null;
@@ -43,7 +48,9 @@ export class PrismaUserRepository implements UserRepository {
     return this.mapPrismaUserToDomain(user);
   }
 
-  async create(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
+  async create(
+    userData: Omit<User, "id" | "createdAt" | "updatedAt">
+  ): Promise<User> {
     const user = await this.prisma.user.create({
       data: {
         name: userData.name,
@@ -52,14 +59,16 @@ export class PrismaUserRepository implements UserRepository {
         emailVerified: userData.emailVerified,
         image: userData.image,
         role: userData.role,
-        social: userData.social as any
-      }
+        social: userData.social as any,
+      },
     });
 
     return this.mapPrismaUserToDomain(user);
   }
 
-  async createAdmin(adminData: Omit<User, 'id' | 'role' | 'createdAt' | 'updatedAt'>): Promise<User> {
+  async createAdmin(
+    adminData: Omit<User, "id" | "role" | "createdAt" | "updatedAt">
+  ): Promise<User> {
     const admin = await this.prisma.user.create({
       data: {
         name: adminData.name,
@@ -68,8 +77,8 @@ export class PrismaUserRepository implements UserRepository {
         emailVerified: adminData.emailVerified,
         image: adminData.image,
         role: UserRole.ADMIN,
-        social: adminData.social as any
-      }
+        social: adminData.social as any,
+      },
     });
 
     return this.mapPrismaUserToDomain(admin);
@@ -85,8 +94,8 @@ export class PrismaUserRepository implements UserRepository {
         emailVerified: userData.emailVerified,
         image: userData.image,
         role: userData.role,
-        social: userData.social as any
-      }
+        social: userData.social as any,
+      },
     });
 
     return this.mapPrismaUserToDomain(user);
@@ -95,7 +104,7 @@ export class PrismaUserRepository implements UserRepository {
   async delete(id: string): Promise<boolean> {
     try {
       await this.prisma.user.delete({
-        where: { id }
+        where: { id },
       });
       return true;
     } catch (error) {
@@ -105,7 +114,7 @@ export class PrismaUserRepository implements UserRepository {
 
   async findVisitorByEmail(email: string): Promise<VisitorUser | null> {
     const visitor = await this.prisma.visitor.findUnique({
-      where: { email }
+      where: { email },
     });
 
     if (!visitor) return null;
@@ -114,31 +123,31 @@ export class PrismaUserRepository implements UserRepository {
       id: visitor.id,
       email: visitor.email,
       createdAt: visitor.createdAt,
-      updatedAt: visitor.updatedAt
+      updatedAt: visitor.updatedAt,
     };
   }
 
   async createVisitor(email: string): Promise<VisitorUser> {
     const visitor = await this.prisma.visitor.create({
-      data: { email }
+      data: { email },
     });
 
     return {
       id: visitor.id,
       email: visitor.email,
       createdAt: visitor.createdAt,
-      updatedAt: visitor.updatedAt
+      updatedAt: visitor.updatedAt,
     };
   }
 
   async getAllVisitors(): Promise<VisitorUser[]> {
     const visitors = await this.prisma.visitor.findMany();
-    
-    return visitors.map(visitor => ({
+
+    return visitors.map((visitor) => ({
       id: visitor.id,
       email: visitor.email,
       createdAt: visitor.createdAt,
-      updatedAt: visitor.updatedAt
+      updatedAt: visitor.updatedAt,
     }));
   }
 
@@ -150,7 +159,7 @@ export class PrismaUserRepository implements UserRepository {
   private mapPrismaUserToDomain(prismaUser: any): User {
     return {
       id: prismaUser.id,
-      name: prismaUser.name || '',
+      name: prismaUser.name || "",
       email: prismaUser.email,
       password: prismaUser.password,
       emailVerified: prismaUser.emailVerified,
@@ -158,7 +167,7 @@ export class PrismaUserRepository implements UserRepository {
       role: prismaUser.role as UserRole,
       social: prismaUser.social as SocialLinks,
       createdAt: prismaUser.createdAt,
-      updatedAt: prismaUser.updatedAt
+      updatedAt: prismaUser.updatedAt,
     };
   }
 }

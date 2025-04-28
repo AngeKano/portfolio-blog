@@ -1,6 +1,6 @@
 // infrastructure/services/analytics/AnalyticsService.ts
-import { PrismaClient } from '@prisma/client';
-import { prisma } from '../../db/prisma/client';
+import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../db/prisma/client";
 
 export class AnalyticsService {
   private prisma: PrismaClient;
@@ -15,9 +15,9 @@ export class AnalyticsService {
   async trackArticleView(articleId: string): Promise<void> {
     await this.prisma.article.update({
       where: { id: articleId },
-      data: { 
-        views: { increment: 1 }
-      }
+      data: {
+        views: { increment: 1 },
+      },
     });
   }
 
@@ -28,8 +28,8 @@ export class AnalyticsService {
     await this.prisma.project.update({
       where: { id: projectId },
       data: {
-        views: { increment: 1 }
-      }
+        views: { increment: 1 },
+      },
     });
   }
 
@@ -40,8 +40,8 @@ export class AnalyticsService {
     await this.prisma.article.update({
       where: { id: articleId },
       data: {
-        likes: { increment: 1 }
-      }
+        likes: { increment: 1 },
+      },
     });
   }
 
@@ -52,8 +52,8 @@ export class AnalyticsService {
     await this.prisma.project.update({
       where: { id: projectId },
       data: {
-        likes: { increment: 1 }
-      }
+        likes: { increment: 1 },
+      },
     });
   }
 
@@ -67,14 +67,14 @@ export class AnalyticsService {
       visitorsCount,
       commentsCount,
       totalViews,
-      totalLikes
+      totalLikes,
     ] = await Promise.all([
       this.prisma.article.count(),
       this.prisma.project.count(),
       this.prisma.visitor.count(),
       this.prisma.comment.count(),
       this.getTotalViews(),
-      this.getTotalLikes()
+      this.getTotalLikes(),
     ]);
 
     return {
@@ -83,7 +83,7 @@ export class AnalyticsService {
       visitorsCount,
       commentsCount,
       totalViews,
-      totalLikes
+      totalLikes,
     };
   }
 
@@ -92,11 +92,11 @@ export class AnalyticsService {
    */
   private async getTotalViews(): Promise<number> {
     const articlesViews = await this.prisma.article.aggregate({
-      _sum: { views: true }
+      _sum: { views: true },
     });
 
     const projectsViews = await this.prisma.project.aggregate({
-      _sum: { views: true }
+      _sum: { views: true },
     });
 
     return (articlesViews._sum.views || 0) + (projectsViews._sum.views || 0);
@@ -107,11 +107,11 @@ export class AnalyticsService {
    */
   private async getTotalLikes(): Promise<number> {
     const articlesLikes = await this.prisma.article.aggregate({
-      _sum: { likes: true }
+      _sum: { likes: true },
     });
 
     const projectsLikes = await this.prisma.project.aggregate({
-      _sum: { likes: true }
+      _sum: { likes: true },
     });
 
     return (articlesLikes._sum.likes || 0) + (projectsLikes._sum.likes || 0);
@@ -122,15 +122,15 @@ export class AnalyticsService {
    */
   async getMostViewedArticles(limit: number = 5) {
     return this.prisma.article.findMany({
-      orderBy: { views: 'desc' },
+      orderBy: { views: "desc" },
       take: limit,
       select: {
         id: true,
         title: true,
         views: true,
         likes: true,
-        publishedAt: true
-      }
+        publishedAt: true,
+      },
     });
   }
 
@@ -139,7 +139,7 @@ export class AnalyticsService {
    */
   async getMostViewedProjects(limit: number = 5) {
     return this.prisma.project.findMany({
-      orderBy: { views: 'desc' },
+      orderBy: { views: "desc" },
       take: limit,
       select: {
         id: true,
@@ -147,8 +147,8 @@ export class AnalyticsService {
         views: true,
         likes: true,
         startDate: true,
-        endDate: true
-      }
+        endDate: true,
+      },
     });
   }
 }

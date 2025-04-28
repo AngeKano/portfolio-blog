@@ -1,18 +1,26 @@
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { prisma } from '../../../infrastructure/db/prisma/client';
-import { PrismaArticleRepository } from '../../../infrastructure/db/prisma/repositories/PrismaArticleRepository';
-import { GetArticleUseCase } from '../../../application/useCases/article/GetArticleUseCase';
-import { AnalyticsService } from '../../../infrastructure/services/analytics/AnalyticsService';
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { prisma } from "../../../infrastructure/db/prisma/client";
+import { PrismaArticleRepository } from "../../../infrastructure/db/prisma/repositories/PrismaArticleRepository";
+import { GetArticleUseCase } from "../../../application/useCases/article/GetArticleUseCase";
+import { AnalyticsService } from "../../../infrastructure/services/analytics/AnalyticsService";
 // import PublicHeader from '../../../ui/components/layouts/PublicHeader';
 // import PublicFooter from '../../../ui/components/layouts/PublicFooter';
 // import CommentSection from '../../../ui/components/blog/CommentSection';
 // import ArticleContent from '../../../ui/components/blog/ArticleContent';
 // import ArticleMeta from '../../../ui/components/blog/ArticleMeta';
 // import ArticleSocialShare from '../../../ui/components/blog/ArticleSocialShare';
-import { LuCalendar, LuClock, LuArrowLeft, LuTag, LuEye, LuHeart } from 'react-icons/lu';
-import { formatDistanceToNow } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import {
+  LuCalendar,
+  LuClock,
+  LuArrowLeft,
+  LuTag,
+  LuEye,
+  LuHeart,
+} from "react-icons/lu";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
+import ArticleContent from "@/ui/components/blog/ArticleContent";
 
 interface ArticlePageProps {
   params: {
@@ -44,6 +52,8 @@ async function getArticle(id: string) {
   const analyticsService = new AnalyticsService();
   await analyticsService.trackArticleView(id);
 
+  console.log("article__ ", article);
+
   return article;
 }
 
@@ -61,7 +71,7 @@ async function getSimilarArticles(article: any) {
       tags: { hasSome: article.tags },
     },
     orderBy: {
-      publishedAt: 'desc',
+      publishedAt: "desc",
     },
     select: {
       id: true,
@@ -123,7 +133,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           )}
 
           {/* Titre */}
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{article.title}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            {article.title}
+          </h1>
 
           {/* Description */}
           <p className="text-xl text-gray-600 mb-6">{article.description}</p>
@@ -135,24 +147,29 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               {article.author?.image ? (
                 <img
                   src={article.author.image}
-                  alt={article.author.name || 'Auteur'}
+                  alt={article.author.name || "Auteur"}
                   className="w-10 h-10 rounded-full mr-3"
                 />
               ) : (
                 <div className="w-10 h-10 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mr-3">
-                  {article.author?.name?.charAt(0) || 'A'}
+                  {article.author?.name?.charAt(0) || "A"}
                 </div>
               )}
               <div>
-                <p className="font-medium text-gray-900">{article.author?.name || 'Auteur'}</p>
+                <p className="font-medium text-gray-900">
+                  {article.author?.name || "Auteur"}
+                </p>
                 <p className="text-gray-500">
                   {article.publishedAt
-                    ? new Date(article.publishedAt).toLocaleDateString('fr-FR', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })
-                    : ''}
+                    ? new Date(article.publishedAt).toLocaleDateString(
+                        "fr-FR",
+                        {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        }
+                      )
+                    : ""}
                 </p>
               </div>
             </div>
@@ -167,7 +184,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         addSuffix: true,
                         locale: fr,
                       })
-                    : 'Non publié'}
+                    : "Non publié"}
                 </span>
               </div>
 
@@ -205,7 +222,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
         {/* Contenu de l'article */}
         <div className="prose prose-lg max-w-none mb-12">
-          {/* <ArticleContent content={article.content} /> */}
+          <ArticleContent content={article.content} />
         </div>
 
         {/* Liens de l'article */}
@@ -215,7 +232,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <ul className="space-y-2">
               {Object.entries(article.links).map(([key, value]) => (
                 <li key={key}>
-                  <strong className="capitalize">{key}:</strong>{' '}
+                  <strong className="capitalize">{key}:</strong>{" "}
                   <a
                     href={value as string}
                     target="_blank"
@@ -236,6 +253,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           url={`/blog/${article.id}`}
           description={article.description}
         /> */}
+       
 
         {/* Section des commentaires */}
         <section className="mt-16">
@@ -262,14 +280,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     />
                   ) : (
                     <div className="w-full h-40 bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-400">Image non disponible</span>
+                      <span className="text-gray-400">
+                        Image non disponible
+                      </span>
                     </div>
                   )}
                   <div className="p-4">
                     <h3 className="font-bold group-hover:text-primary-600 transition-colors">
                       {similar.title}
                     </h3>
-                    <p className="text-sm text-gray-600 mt-2 line-clamp-2">{similar.description}</p>
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                      {similar.description}
+                    </p>
                   </div>
                 </Link>
               ))}

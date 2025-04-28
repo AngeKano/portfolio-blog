@@ -1,10 +1,10 @@
 // src/application/dtos/ArticleDTO.ts
-import { ArticleLinks } from '../../domain/entities/Article';
+import { ArticleLinks } from "../../domain/entities/Article";
 
-/** 
+/**
  * Les different type utile dans le front
  * Pour tous ce qui sera data a manipuler
-*/
+ */
 
 /**
  * DTO pour la création d'un article
@@ -23,7 +23,7 @@ export interface CreateArticleDTO {
  * DTO pour la mise à jour d'un article
  */
 export interface UpdateArticleDTO {
-  title?: string; 
+  title?: string;
   description?: string;
   content?: string;
   image?: string;
@@ -32,7 +32,6 @@ export interface UpdateArticleDTO {
   tags?: string[];
 }
 
-
 /**
  * DTO pour l'affichage d'un article résumé
  */
@@ -40,11 +39,13 @@ export interface ArticleSummaryDTO {
   id: string;
   title: string;
   description: string;
+  published: boolean;
   image?: string;
-  publishedAt?: Date | null;
-  tags: string[];
-  authorName: string;
-  authorImage?: string;
+  publishedAt: string | null;
+  views: number;
+  likes: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**

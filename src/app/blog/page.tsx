@@ -1,14 +1,14 @@
-import { Suspense } from 'react';
-import Link from 'next/link';
-import { prisma } from '../../infrastructure/db/prisma/client';
-import { PrismaArticleRepository } from '../../infrastructure/db/prisma/repositories/PrismaArticleRepository';
-import { ListArticlesUseCase } from '../../application/useCases/article/ListArticlesUseCase';
+import { Suspense } from "react";
+import Link from "next/link";
+import { prisma } from "../../infrastructure/db/prisma/client";
+import { PrismaArticleRepository } from "../../infrastructure/db/prisma/repositories/PrismaArticleRepository";
+import { ListArticlesUseCase } from "../../application/useCases/article/ListArticlesUseCase";
 // import PublicHeader from '../../ui/components/layouts/PublicHeader';
 // import PublicFooter from '../../ui/components/layouts/PublicFooter';
-import { LuCalendar, LuClock, LuLoader, LuTag } from 'react-icons/lu';
-import { formatDistanceToNow } from 'date-fns';
-import { fr } from 'date-fns/locale';
-import PublicFooter from '@/ui/components/layouts/PublicFooter';
+import { LuCalendar, LuClock, LuLoader, LuTag } from "react-icons/lu";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
+import PublicFooter from "@/ui/components/layouts/PublicFooter";
 
 interface BlogPageProps {
   searchParams: {
@@ -19,7 +19,7 @@ interface BlogPageProps {
 }
 
 async function getArticles(props: BlogPageProps) {
-  const { page = '1', tag, search } = props.searchParams;
+  const { page = "1", tag, search } = props.searchParams;
   const pageNumber = parseInt(page, 10) || 1;
   const limit = 9; // Nombre d'articles par page
 
@@ -40,8 +40,8 @@ async function getArticles(props: BlogPageProps) {
       page: pageNumber,
       limit,
       searchTerm: search,
-      sortBy: 'publishedAt',
-      sortOrder: 'desc',
+      sortBy: "publishedAt",
+      sortOrder: "desc",
     },
     true // Uniquement les articles publiés
   );
@@ -81,10 +81,10 @@ export default async function BlogPage(props: BlogPageProps) {
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl font-bold mb-4">Blog</h1>
           <p className="text-xl max-w-3xl mx-auto">
-            Découvrez mes articles sur le développement web, les nouvelles technologies
-            et les bonnes pratiques de programmation.
+            Découvrez mes articles sur le développement web, les nouvelles
+            technologies et les bonnes pratiques de programmation.
           </p>
-          
+
           {/* Barre de recherche */}
           <div className="mt-8 max-w-md mx-auto">
             <form action="/blog" method="GET" className="relative">
@@ -92,7 +92,7 @@ export default async function BlogPage(props: BlogPageProps) {
                 type="text"
                 name="search"
                 placeholder="Rechercher un article..."
-                defaultValue={props.searchParams.search || ''}
+                defaultValue={props.searchParams.search || ""}
                 className="w-full px-4 py-2 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
               <button
@@ -110,13 +110,15 @@ export default async function BlogPage(props: BlogPageProps) {
       <section className="bg-gray-100 py-4">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">Filtrer par tag:</span>
+            <span className="text-sm font-medium text-gray-700">
+              Filtrer par tag:
+            </span>
             <Link
               href="/blog"
               className={`px-3 py-1 text-sm rounded-full ${
                 !selectedTag
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? "bg-primary-600 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
               Tous
@@ -127,8 +129,8 @@ export default async function BlogPage(props: BlogPageProps) {
                 href={`/blog?tag=${encodeURIComponent(tag)}`}
                 className={`px-3 py-1 text-sm rounded-full ${
                   selectedTag === tag
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ? "bg-primary-600 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
                 {tag}
@@ -141,7 +143,13 @@ export default async function BlogPage(props: BlogPageProps) {
       {/* Liste des articles */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <Suspense fallback={<div className="flex justify-center"><LuLoader className="w-10 h-10 text-primary-600 animate-spin" /></div>}>
+          <Suspense
+            fallback={
+              <div className="flex justify-center">
+                <LuLoader className="w-10 h-10 text-primary-600 animate-spin" />
+              </div>
+            }
+          >
             {articles.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -160,7 +168,9 @@ export default async function BlogPage(props: BlogPageProps) {
                           />
                         ) : (
                           <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-                            <span className="text-gray-400">Image non disponible</span>
+                            <span className="text-gray-400">
+                              Image non disponible
+                            </span>
                           </div>
                         )}
                       </Link>
@@ -193,7 +203,9 @@ export default async function BlogPage(props: BlogPageProps) {
                             {article.title}
                           </h2>
                         </Link>
-                        <p className="text-gray-600 mb-4 line-clamp-3">{article.description}</p>
+                        <p className="text-gray-600 mb-4 line-clamp-3">
+                          {article.description}
+                        </p>
 
                         {/* Métadonnées */}
                         <div className="flex items-center text-sm text-gray-500 mb-4">
@@ -201,11 +213,14 @@ export default async function BlogPage(props: BlogPageProps) {
                             <LuCalendar className="w-4 h-4 mr-1" />
                             <span>
                               {article.publishedAt
-                                ? formatDistanceToNow(new Date(article.publishedAt), {
-                                    addSuffix: true,
-                                    locale: fr,
-                                  })
-                                : 'Non publié'}
+                                ? formatDistanceToNow(
+                                    new Date(article.publishedAt),
+                                    {
+                                      addSuffix: true,
+                                      locale: fr,
+                                    }
+                                  )
+                                : "Non publié"}
                             </span>
                           </div>
                           <div className="flex items-center">
@@ -246,28 +261,39 @@ export default async function BlogPage(props: BlogPageProps) {
                     <nav className="inline-flex">
                       <Link
                         href={`/blog?page=${pagination.currentPage - 1}${
-                          selectedTag ? `&tag=${selectedTag}` : ''
-                        }${props.searchParams.search ? `&search=${props.searchParams.search}` : ''}`}
+                          selectedTag ? `&tag=${selectedTag}` : ""
+                        }${
+                          props.searchParams.search
+                            ? `&search=${props.searchParams.search}`
+                            : ""
+                        }`}
                         className={`px-4 py-2 text-sm border border-gray-300 bg-white text-gray-700 rounded-l-md ${
                           pagination.currentPage === 1
-                            ? 'opacity-50 cursor-not-allowed'
-                            : 'hover:bg-gray-50'
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:bg-gray-50"
                         }`}
                         aria-disabled={pagination.currentPage === 1}
                         tabIndex={pagination.currentPage === 1 ? -1 : undefined}
                       >
                         Précédent
                       </Link>
-                      {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
+                      {Array.from(
+                        { length: pagination.totalPages },
+                        (_, i) => i + 1
+                      ).map((page) => (
                         <Link
                           key={page}
                           href={`/blog?page=${page}${
-                            selectedTag ? `&tag=${selectedTag}` : ''
-                          }${props.searchParams.search ? `&search=${props.searchParams.search}` : ''}`}
+                            selectedTag ? `&tag=${selectedTag}` : ""
+                          }${
+                            props.searchParams.search
+                              ? `&search=${props.searchParams.search}`
+                              : ""
+                          }`}
                           className={`px-4 py-2 text-sm border-t border-b border-gray-300 ${
                             page === pagination.currentPage
-                              ? 'bg-primary-600 text-white'
-                              : 'bg-white text-gray-700 hover:bg-gray-50'
+                              ? "bg-primary-600 text-white"
+                              : "bg-white text-gray-700 hover:bg-gray-50"
                           }`}
                         >
                           {page}
@@ -275,15 +301,25 @@ export default async function BlogPage(props: BlogPageProps) {
                       ))}
                       <Link
                         href={`/blog?page=${pagination.currentPage + 1}${
-                          selectedTag ? `&tag=${selectedTag}` : ''
-                        }${props.searchParams.search ? `&search=${props.searchParams.search}` : ''}`}
+                          selectedTag ? `&tag=${selectedTag}` : ""
+                        }${
+                          props.searchParams.search
+                            ? `&search=${props.searchParams.search}`
+                            : ""
+                        }`}
                         className={`px-4 py-2 text-sm border border-gray-300 bg-white text-gray-700 rounded-r-md ${
                           pagination.currentPage === pagination.totalPages
-                            ? 'opacity-50 cursor-not-allowed'
-                            : 'hover:bg-gray-50'
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:bg-gray-50"
                         }`}
-                        aria-disabled={pagination.currentPage === pagination.totalPages}
-                        tabIndex={pagination.currentPage === pagination.totalPages ? -1 : undefined}
+                        aria-disabled={
+                          pagination.currentPage === pagination.totalPages
+                        }
+                        tabIndex={
+                          pagination.currentPage === pagination.totalPages
+                            ? -1
+                            : undefined
+                        }
                       >
                         Suivant
                       </Link>
@@ -293,13 +329,15 @@ export default async function BlogPage(props: BlogPageProps) {
               </>
             ) : (
               <div className="text-center py-20">
-                <h2 className="text-2xl font-bold text-gray-700 mb-4">Aucun article trouvé</h2>
+                <h2 className="text-2xl font-bold text-gray-700 mb-4">
+                  Aucun article trouvé
+                </h2>
                 <p className="text-gray-500 mb-8">
                   {selectedTag
                     ? `Aucun article trouvé avec le tag "${selectedTag}".`
                     : props.searchParams.search
                     ? `Aucun résultat pour "${props.searchParams.search}".`
-                    : 'Aucun article publié pour le moment.'}
+                    : "Aucun article publié pour le moment."}
                 </p>
                 <Link
                   href="/blog"

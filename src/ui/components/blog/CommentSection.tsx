@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { formatDistanceToNow } from 'date-fns';
-import { fr } from 'date-fns/locale';
-import { LuLoader, LuUser } from 'react-icons/lu';
-import { useNotificationContext } from '../../context/NotificationContext';
+import React, { useState } from "react";
+import { useSession } from "next-auth/react";
+import { formatDistanceToNow } from "date-fns";
+import { fr } from "date-fns/locale";
+import { LuLoader, LuUser } from "react-icons/lu";
+import { useNotificationContext } from "../../context/NotificationContext";
 
 interface Comment {
   id: string;
@@ -20,53 +20,56 @@ interface CommentSectionProps {
   comments: Comment[];
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ articleId, comments: initialComments }) => {
+const CommentSection: React.FC<CommentSectionProps> = ({
+  articleId,
+  comments: initialComments,
+}) => {
   const { data: session } = useSession();
-  const [content, setContent] = useState('');
-  const [name, setName] = useState(session?.user?.name || '');
+  const [content, setContent] = useState("");
+  const [name, setName] = useState(session?.user?.name || "");
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { success, error: showError } = useNotificationContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!session) {
-      showError('Vous devez être connecté pour commenter');
+      showError("Vous devez être connecté pour commenter");
       return;
     }
-    
+
     if (!content.trim()) {
-      showError('Le commentaire ne peut pas être vide');
+      showError("Le commentaire ne peut pas être vide");
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch(`/api/articles/${articleId}/comments`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           content,
           name: name || undefined,
         }),
       });
-      
+
       if (!response.ok) {
-        throw new Error('Erreur lors de l\'ajout du commentaire');
+        throw new Error("Erreur lors de l'ajout du commentaire");
       }
-      
+
       const newComment = await response.json();
-      
+
       // Ajouter le nouveau commentaire à la liste
       setComments([newComment, ...comments]);
-      setContent(''); // Réinitialiser le formulaire
-      success('Commentaire ajouté avec succès');
+      setContent(""); // Réinitialiser le formulaire
+      success("Commentaire ajouté avec succès");
     } catch (err) {
-      showError('Impossible d\'ajouter le commentaire');
+      showError("Impossible d'ajouter le commentaire");
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -125,7 +128,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId, comments: in
                   Envoi...
                 </>
               ) : (
-                'Publier'
+                "Publier"
               )}
             </button>
           </div>
@@ -133,10 +136,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId, comments: in
       ) : (
         <div className="bg-gray-50 p-4 rounded-md mb-8">
           <p className="text-center text-gray-600">
-            Vous devez être{' '}
-            <a href="/login" className="text-primary-600 hover:text-primary-800">
+            Vous devez être{" "}
+            <a
+              href="/login"
+              className="text-primary-600 hover:text-primary-800"
+            >
               connecté
-            </a>{' '}
+            </a>{" "}
             pour laisser un commentaire.
           </p>
         </div>
@@ -155,7 +161,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId, comments: in
                 </div>
                 <div className="ml-3 flex-1">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-medium text-gray-900">{comment.name || 'Anonyme'}</h4>
+                    <h4 className="text-sm font-medium text-gray-900">
+                      {comment.name || "Anonyme"}
+                    </h4>
                     <p className="text-xs text-gray-500">
                       {formatDistanceToNow(new Date(comment.createdAt), {
                         addSuffix: true,
@@ -163,7 +171,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId, comments: in
                       })}
                     </p>
                   </div>
-                  <div className="mt-1 text-sm text-gray-700 whitespace-pre-line">{comment.content}</div>
+                  <div className="mt-1 text-sm text-gray-700 whitespace-pre-line">
+                    {comment.content}
+                  </div>
                 </div>
               </div>
             </div>
@@ -171,7 +181,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ articleId, comments: in
         </div>
       ) : (
         <div className="text-center py-8 text-gray-500">
-          <p>Aucun commentaire pour le moment. Soyez le premier à commenter !</p>
+          <p>
+            Aucun commentaire pour le moment. Soyez le premier à commenter !
+          </p>
         </div>
       )}
     </div>

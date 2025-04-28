@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useNotificationContext } from '../../../../ui/context/NotificationContext';
-import { LuSave, LuChevronLeft, LuLoader } from 'react-icons/lu';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useNotificationContext } from "../../../../ui/context/NotificationContext";
+import { LuSave, LuChevronLeft, LuLoader } from "react-icons/lu";
+import Link from "next/link";
 
 interface ArticleFormData {
   title: string;
@@ -15,23 +15,29 @@ interface ArticleFormData {
   tags: string[];
 }
 
-export default function EditArticlePage({ params }: { params: { id: string } }) {
+export default function EditArticlePage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const [formData, setFormData] = useState<ArticleFormData>({
-    title: '',
-    description: '',
-    content: '',
-    image: '',
+    title: "",
+    description: "",
+    content: "",
+    image: "",
     published: false,
     tags: [],
   });
-  
-  const [originalData, setOriginalData] = useState<ArticleFormData | null>(null);
-  const [tagInput, setTagInput] = useState('');
+
+  const [originalData, setOriginalData] = useState<ArticleFormData | null>(
+    null
+  );
+  const [tagInput, setTagInput] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const router = useRouter();
   const { success, error: showError } = useNotificationContext();
 
@@ -41,26 +47,26 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
       try {
         setIsLoading(true);
         const response = await fetch(`/api/articles/${params.id}`);
-        
+
         if (!response.ok) {
-          throw new Error('Erreur lors de la récupération de l\'article');
+          throw new Error("Erreur lors de la récupération de l'article");
         }
-        
+
         const article = await response.json();
-        
+
         const articleData = {
           title: article.title,
           description: article.description,
           content: article.content,
-          image: article.image || '',
+          image: article.image || "",
           published: article.published,
           tags: article.tags || [],
         };
-        
+
         setFormData(articleData);
         setOriginalData(articleData);
       } catch (err) {
-        setError('Impossible de charger l\'article');
+        setError("Impossible de charger l'article");
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -71,43 +77,48 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
   }, [params.id]);
 
   // Gérer les changements dans le formulaire
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'published' ? (e.target as HTMLInputElement).checked : value,
+      [name]:
+        name === "published" ? (e.target as HTMLInputElement).checked : value,
     }));
-    
+
     // Effacer l'erreur lorsque l'utilisateur modifie le champ
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   // Gérer l'ajout d'un tag
   const handleAddTag = () => {
     if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         tags: [...prev.tags, tagInput.trim()],
       }));
-      setTagInput('');
+      setTagInput("");
     }
   };
 
   // Gérer la suppression d'un tag
   const handleRemoveTag = (tagToRemove: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove),
+      tags: prev.tags.filter((tag) => tag !== tagToRemove),
     }));
   };
 
   // Déterminer si le formulaire a été modifié
   const hasChanges = () => {
     if (!originalData) return false;
-    
+
     return (
       formData.title !== originalData.title ||
       formData.description !== originalData.description ||
@@ -121,64 +132,69 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
   // Gérer la soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Valider le formulaire
     const validationErrors: Record<string, string> = {};
-    
+
     if (!formData.title.trim()) {
-      validationErrors.title = 'Le titre est obligatoire';
+      validationErrors.title = "Le titre est obligatoire";
     } else if (formData.title.trim().length < 3) {
-      validationErrors.title = 'Le titre doit contenir au moins 3 caractères';
+      validationErrors.title = "Le titre doit contenir au moins 3 caractères";
     }
-    
+
     if (!formData.description.trim()) {
-      validationErrors.description = 'La description est obligatoire';
+      validationErrors.description = "La description est obligatoire";
     } else if (formData.description.trim().length < 10) {
-      validationErrors.description = 'La description doit contenir au moins 10 caractères';
+      validationErrors.description =
+        "La description doit contenir au moins 10 caractères";
     }
-    
+
     if (!formData.content.trim()) {
-      validationErrors.content = 'Le contenu est obligatoire';
+      validationErrors.content = "Le contenu est obligatoire";
     } else if (formData.content.trim().length < 50) {
-      validationErrors.content = 'Le contenu doit contenir au moins 50 caractères';
+      validationErrors.content =
+        "Le contenu doit contenir au moins 50 caractères";
     }
-    
+
     if (formData.image && !/^(https?:\/\/)/.test(formData.image)) {
-      validationErrors.image = 'L\'URL de l\'image doit commencer par http:// ou https://';
+      validationErrors.image =
+        "L'URL de l'image doit commencer par http:// ou https://";
     }
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    
+
     // Si aucune modification n'a été faite, revenir à la liste
     if (!hasChanges()) {
-      router.push('/admin/articles');
+      router.push("/admin/articles");
       return;
     }
-    
+
     // Soumettre le formulaire
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch(`/api/articles/${params.id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-      
+
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Erreur lors de la mise à jour de l\'article');
+        throw new Error(
+          data.error || "Erreur lors de la mise à jour de l'article"
+        );
       }
-      
-      success('Article mis à jour avec succès');
-      router.push('/admin/articles');
+
+      success("Article mis à jour avec succès");
+      router.push("/admin/articles");
     } catch (err: any) {
-      showError(err.message || 'Impossible de mettre à jour l\'article');
+      showError(err.message || "Impossible de mettre à jour l'article");
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -199,7 +215,10 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
         </div>
-        <Link href="/admin/articles" className="text-primary-600 hover:text-primary-700">
+        <Link
+          href="/admin/articles"
+          className="text-primary-600 hover:text-primary-700"
+        >
           Retour à la liste des articles
         </Link>
       </div>
@@ -215,16 +234,19 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
         >
           <LuChevronLeft className="mr-1" /> Retour à la liste
         </Link>
-        
+
         <h1 className="text-2xl font-bold mt-2">Modifier l'article</h1>
       </div>
-      
+
       <div className="bg-white shadow-md rounded-lg p-6">
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-6">
             {/* Titre */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Titre <span className="text-red-500">*</span>
               </label>
               <input
@@ -234,16 +256,21 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
                 value={formData.title}
                 onChange={handleChange}
                 className={`w-full px-3 py-2 border rounded-md ${
-                  errors.title ? 'border-red-500' : 'border-gray-300'
+                  errors.title ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Titre de l'article"
               />
-              {errors.title && <p className="mt-1 text-sm text-red-500">{errors.title}</p>}
+              {errors.title && (
+                <p className="mt-1 text-sm text-red-500">{errors.title}</p>
+              )}
             </div>
-            
+
             {/* Description */}
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Description <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -253,32 +280,39 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
                 onChange={handleChange}
                 rows={3}
                 className={`w-full px-3 py-2 border rounded-md ${
-                  errors.description ? 'border-red-500' : 'border-gray-300'
+                  errors.description ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Brève description de l'article"
               />
               {errors.description && (
-                <p className="mt-1 text-sm text-red-500">{errors.description}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.description}
+                </p>
               )}
             </div>
-            
+
             {/* Image */}
             <div>
-              <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="image"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 URL de l'image
               </label>
               <input
                 type="text"
                 id="image"
                 name="image"
-                value={formData.image || ''}
+                value={formData.image || ""}
                 onChange={handleChange}
                 className={`w-full px-3 py-2 border rounded-md ${
-                  errors.image ? 'border-red-500' : 'border-gray-300'
+                  errors.image ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="https://exemple.com/image.jpg"
               />
-              {errors.image && <p className="mt-1 text-sm text-red-500">{errors.image}</p>}
+              {errors.image && (
+                <p className="mt-1 text-sm text-red-500">{errors.image}</p>
+              )}
               {formData.image && (
                 <div className="mt-2">
                   <img
@@ -286,16 +320,20 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
                     alt="Aperçu"
                     className="max-h-40 rounded border"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x200?text=Image+non+disponible';
+                      (e.target as HTMLImageElement).src =
+                        "https://via.placeholder.com/300x200?text=Image+non+disponible";
                     }}
                   />
                 </div>
               )}
             </div>
-            
+
             {/* Tags */}
             <div>
-              <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="tags"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Tags
               </label>
               <div className="flex">
@@ -307,7 +345,7 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md"
                   placeholder="Ajouter un tag"
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       handleAddTag();
                     }
@@ -341,10 +379,13 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
                 </div>
               )}
             </div>
-            
+
             {/* Contenu */}
             <div>
-              <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="content"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Contenu <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -354,16 +395,18 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
                 onChange={handleChange}
                 rows={15}
                 className={`w-full px-3 py-2 border rounded-md ${
-                  errors.content ? 'border-red-500' : 'border-gray-300'
+                  errors.content ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Contenu de l'article en Markdown"
               />
-              {errors.content && <p className="mt-1 text-sm text-red-500">{errors.content}</p>}
+              {errors.content && (
+                <p className="mt-1 text-sm text-red-500">{errors.content}</p>
+              )}
               <p className="mt-1 text-xs text-gray-500">
                 Le contenu est formaté en Markdown.
               </p>
             </div>
-            
+
             {/* Statut de publication */}
             <div className="flex items-center">
               <input
@@ -374,11 +417,14 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
                 onChange={handleChange}
                 className="h-4 w-4 text-primary-600 border-gray-300 rounded"
               />
-              <label htmlFor="published" className="ml-2 block text-sm text-gray-700">
-                {formData.published ? 'Article publié' : 'Publier l\'article'}
+              <label
+                htmlFor="published"
+                className="ml-2 block text-sm text-gray-700"
+              >
+                {formData.published ? "Article publié" : "Publier l'article"}
               </label>
             </div>
-            
+
             {/* Boutons d'action */}
             <div className="flex justify-end space-x-4 pt-4">
               <Link
@@ -387,14 +433,14 @@ export default function EditArticlePage({ params }: { params: { id: string } }) 
               >
                 Annuler
               </Link>
-              
+
               <button
                 type="submit"
                 disabled={isSubmitting || !hasChanges()}
                 className={`px-4 py-2 rounded-md flex items-center ${
                   hasChanges()
-                    ? 'bg-primary-600 text-white hover:bg-primary-700'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    ? "bg-primary-600 text-white hover:bg-primary-700"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
               >
                 {isSubmitting ? (
