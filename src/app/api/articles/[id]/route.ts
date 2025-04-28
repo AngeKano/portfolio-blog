@@ -7,7 +7,7 @@ import { PrismaArticleRepository } from "../../../../infrastructure/db/prisma/re
 import { GetArticleUseCase } from "../../../../application/useCases/article/GetArticleUseCase";
 import { UpdateArticleUseCase } from "../../../../application/useCases/article/UpdateArticleUseCase";
 import { DeleteArticleUseCase } from "../../../../application/useCases/article/DeleteArticleUseCase";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../auth/[...nextauth]/auth.config";
 import { AnalyticsService } from "../../../../infrastructure/services/analytics/AnalyticsService";
 
 // Schéma de validation pour la mise à jour d'un article

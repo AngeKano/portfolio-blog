@@ -2,7 +2,7 @@
 import React from 'react';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '../api/auth/[...nextauth]/auth.config';
 import { UserRole } from '../../domain/entities/User';
 import Sidebar from '@/ui/components/layouts/Sidebar';
 import Header from '@/ui/components/layouts/Header';

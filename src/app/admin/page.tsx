@@ -1,7 +1,7 @@
 // app/admin/page.tsx
 import React from 'react';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '../api/auth/[...nextauth]/auth.config';
 import { AnalyticsService } from '../../infrastructure/services/analytics/AnalyticsService';
 
 // Statistiques basiques pour le dashboard

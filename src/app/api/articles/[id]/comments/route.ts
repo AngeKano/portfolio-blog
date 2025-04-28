@@ -5,7 +5,8 @@ import { z } from 'zod';
 import { prisma } from '../../../../../infrastructure/db/prisma/client';
 import { PrismaArticleRepository } from '../../../../../infrastructure/db/prisma/repositories/PrismaArticleRepository';
 import { GetArticleUseCase } from '../../../../../application/useCases/article/GetArticleUseCase';
-import { authOptions } from '../../../auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]/auth.config';
+
 
 // Schéma de validation pour la création d'un commentaire
 const createCommentSchema = z.object({

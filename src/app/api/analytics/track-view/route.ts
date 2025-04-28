@@ -2,8 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { AnalyticsService } from '../../../../infrastructure/services/analytics/AnalyticsService';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+
 
 // Schéma de validation
 const trackViewSchema = z.object({

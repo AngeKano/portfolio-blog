@@ -6,7 +6,7 @@ import { prisma } from "../../../infrastructure/db/prisma/client";
 import { PrismaArticleRepository } from "../../../infrastructure/db/prisma/repositories/PrismaArticleRepository";
 import { CreateArticleUseCase } from "../../../application/useCases/article/CreateArticleUseCase";
 import { ListArticlesUseCase } from "../../../application/useCases/article/ListArticlesUseCase";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "../auth/[...nextauth]/auth.config";
 
 // Schéma de validation pour la création d'un article
 const createArticleSchema = z.object({

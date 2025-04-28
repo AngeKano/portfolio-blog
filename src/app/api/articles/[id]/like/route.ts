@@ -4,8 +4,9 @@ import { getServerSession } from 'next-auth';
 import { prisma } from '../../../../../infrastructure/db/prisma/client';
 import { PrismaArticleRepository } from '../../../../../infrastructure/db/prisma/repositories/PrismaArticleRepository';
 import { GetArticleUseCase } from '../../../../../application/useCases/article/GetArticleUseCase';
-import { authOptions } from '../../../auth/[...nextauth]/route';
+
 import { AnalyticsService } from '../../../../../infrastructure/services/analytics/AnalyticsService';
+import { authOptions } from '@/app/api/auth/[...nextauth]/auth.config';
 
 // POST /api/articles/[id]/like - Ajouter un like à un article
 export async function POST(
