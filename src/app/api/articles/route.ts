@@ -61,6 +61,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!validationResult.success) {
+      console.log("qsdqsd qsdqsd");
       return NextResponse.json(
         {
           error: "Paramètres de requête invalides",
@@ -137,6 +138,8 @@ export async function POST(request: NextRequest) {
     const validationResult = createArticleSchema.safeParse(body);
 
     if (!validationResult.success) {
+      console.log("qsdqsd qsdqsd");
+
       return NextResponse.json(
         { error: "Données invalides", details: validationResult.error.errors },
         { status: 400 }
@@ -165,6 +168,7 @@ export async function POST(request: NextRequest) {
       error.message === "Le contenu est obligatoire" ||
       error.message === "L'auteur est obligatoire"
     ) {
+
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
