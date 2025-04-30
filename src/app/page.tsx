@@ -44,15 +44,12 @@ async function getLatestContent() {
     },
   });
 
-  // J'ai remarqué que vous aviez mis en commentaire certaines parties
-  // N'oubliez pas de réactiver l'orderBy et le take
 
   return { articles, projects, skills };
 }
 
 export default async function Home() {
   const { articles, projects, skills } = await getLatestContent();
-  console.log("articles__ ", articles); // Le console.log montrera les données actuelles
 
   return (
     <main className="min-h-screen">

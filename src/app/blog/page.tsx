@@ -4,7 +4,6 @@ import { prisma } from "../../infrastructure/db/prisma/client";
 import { PrismaArticleRepository } from "../../infrastructure/db/prisma/repositories/PrismaArticleRepository";
 import { ListArticlesUseCase } from "../../application/useCases/article/ListArticlesUseCase";
 // import PublicHeader from '../../ui/components/layouts/PublicHeader';
-// import PublicFooter from '../../ui/components/layouts/PublicFooter';
 import { LuCalendar, LuClock, LuLoader, LuTag } from "react-icons/lu";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -17,6 +16,8 @@ interface BlogPageProps {
     search?: string;
   };
 }
+
+export const dynamic = "force-dynamic";
 
 async function getArticles(props: BlogPageProps) {
   const { page = "1", tag, search } = props.searchParams;
